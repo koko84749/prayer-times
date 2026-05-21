@@ -44,12 +44,47 @@ fi
 mkdir -p "$HOME/.config/dunst"
 cp "$CONFIG_DIR/dunstrc" "$HOME/.config/dunst/dunstrc"
 
+# Install systemd user service for daemon autostart
+mkdir -p "$HOME/.config/systemd/user"
+cat > "$HOME/.config/systemd/user/prayer-times.service" << 'SERVICE'
+[Unit]
+Description=Islamic Prayer Times Daemon
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=%h/.config/prayer-times/prayer-times.sh start
+ExecStop=%h/.config/prayer-times/prayer-times.sh stop
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target
+SERVICE
+
+systemctl --user daemon-reload
+
+# Install GNOME Shell extension on Ubuntu/Debian
+if [ -f /etc/debian_version ] || [ -f /etc/os-release ] && grep -qi ubuntu /etc/os-release 2>/dev/null; then
+    echo "🖥️ Debian/Ubuntu detected — installing GNOME Shell extension..."
+    EXT_UUID="prayer-times@koko84749"
+    EXT_DIR="$HOME/.local/share/gnome-shell/extensions/$EXT_UUID"
+    mkdir -p "$EXT_DIR"
+    for f in metadata.json extension.js stylesheet.css; do
+        curl -sL "$REPO/gnome-extension/$f" -o "$EXT_DIR/$f"
+    done
+    echo "  ✅ GNOME extension installed to $EXT_DIR"
+    echo "  💡 Enable it with: gnome-extensions enable $EXT_UUID"
+    echo "     (or use Extension Manager app, then log out & back in)"
+fi
+
 echo ""
 echo "✅ Installation complete!"
 echo ""
-echo "🔧 To enable autostart, add to your Hyprland config:"
-echo "    exec-once = dunst &"
-echo "    exec-once = $HOME/.config/prayer-times/prayer-times.sh start"
+echo "🔧 Start the daemon now:"
+echo "    systemctl --user start prayer-times"
+echo "    systemctl --user enable prayer-times   # autostart on login"
 echo ""
 echo "📋 Commands:"
 echo "    prayer-times.sh start    - Start the daemon"

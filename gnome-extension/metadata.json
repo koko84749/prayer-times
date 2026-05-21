@@ -1,0 +1,8 @@
+{
+  "name": "Prayer Times",
+  "description": "Shows next Islamic prayer time and countdown in the top panel",
+  "uuid": "prayer-times@koko84749",
+  "shell-version": ["45", "46", "47", "48"],
+  "version": 1,
+  "url": "https://github.com/koko84749/prayer-times"
+}

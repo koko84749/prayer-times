@@ -30,6 +30,28 @@ cp -r noctalia-plugin ~/.config/noctalia/plugins/prayer-times
 
 The plugin adds a **bar widget** showing the next prayer countdown and a **settings panel** to configure the daemon from Noctalia's UI.
 
+### GNOME Extension (Ubuntu/Debian)
+
+On Debian/Ubuntu, the installer automatically sets up a **GNOME Shell extension** that shows the next prayer countdown in the top panel:
+
+- Displays next prayer name + time remaining (e.g. `🕌 Asr 2h 15m`)
+- Click to open a dropdown with all prayer times
+- Auto-updates every 30 seconds
+- Reads from the daemon's local cache (daemon must be running)
+
+After installation, enable it:
+
+```bash
+gnome-extensions enable prayer-times@koko84749
+```
+
+Or use **Extension Manager** app, then **log out & back in**.
+
+> **Note:** on Ubuntu 24.04+, you may need to install `gnome-shell-extensions` first:
+> ```bash
+> sudo apt install gnome-shell-extension-manager
+> ```
+
 ### Dependencies
 
 ```bash
