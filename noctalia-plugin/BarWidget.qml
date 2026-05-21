@@ -23,8 +23,15 @@ Item {
   property string prayerText: "🌙 ?"
   property string prayerClass: ""
 
-  implicitWidth: 24
+  implicitWidth: textMetrics.advanceWidth + 24
   implicitHeight: capsuleHeight
+
+  TextMetrics {
+    id: textMetrics
+    font.family: "monospace"
+    font.pixelSize: 13
+    text: root.prayerText
+  }
 
   Process {
     id: proc
