@@ -27,11 +27,12 @@ times)
         notify-send -a prayer-times -u critical -t 5000 "Error" "No cached times"
         exit 1
     fi
-    FAJR=$(jq -r 'if type==\"object\" and has(\"timings\") then .timings.Fajr else .Fajr end' "$CACHE")
-    DHUHR=$(jq -r 'if type==\"object\" and has(\"timings\") then .timings.Dhuhr else .Dhuhr end' "$CACHE")
-    ASR=$(jq -r 'if type==\"object\" and has(\"timings\") then .timings.Asr else .Asr end' "$CACHE")
-    MAGHRIB=$(jq -r 'if type==\"object\" and has(\"timings\") then .timings.Maghrib else .Maghrib end' "$CACHE")
-    ISHA=$(jq -r 'if type==\"object\" and has(\"timings\") then .timings.Isha else .Isha end' "$CACHE")
+    JQ_FILTER='if type=="object" and has("timings") then .timings else . end'
+    FAJR=$(jq -r "$JQ_FILTER | .Fajr" "$CACHE")
+    DHUHR=$(jq -r "$JQ_FILTER | .Dhuhr" "$CACHE")
+    ASR=$(jq -r "$JQ_FILTER | .Asr" "$CACHE")
+    MAGHRIB=$(jq -r "$JQ_FILTER | .Maghrib" "$CACHE")
+    ISHA=$(jq -r "$JQ_FILTER | .Isha" "$CACHE")
     notify-send -a prayer-times -u normal -t 10000 "🕌 Today's Prayer Times" "Fajr: $FAJR\nDhuhr: $DHUHR\nAsr: $ASR\nMaghrib: $MAGHRIB\nIsha: $ISHA"
     ;;
 test)
@@ -49,8 +50,11 @@ except Exception as e:
     print(f'Error: {e}')
 "
     ;;
+location)
+    exec "$HOME/.config/prayer-times/set-location.sh"
+    ;;
 *)
-    echo "Usage: $0 {status|select|start|stop|restart|test|times}"
+    echo "Usage: $0 {status|select|start|stop|restart|test|times|location}"
     exit 1
     ;;
 esac

@@ -92,6 +92,7 @@ Item {
     model: [
       { "label": "Show Times", "action": "show-times", "icon": "calendar" },
       { "label": "Select Athan", "action": "select-athan", "icon": "music" },
+      { "label": "Set Location", "action": "set-location", "icon": "map" },
       { "label": "Restart Daemon", "action": "toggle-daemon", "icon": "power" },
     ]
     onTriggered: action => {
@@ -101,6 +102,8 @@ Item {
         Quickshell.execDetached(["sh", "-c", "/home/hamo/.config/prayer-times/prayer-times.sh times"])
       else if (action === "select-athan")
         Quickshell.execDetached(["sh", "-c", "/home/hamo/.config/prayer-times/prayer-times.sh select"])
+      else if (action === "set-location")
+        Quickshell.execDetached(["sh", "-c", "/home/hamo/.config/prayer-times/prayer-times.sh location"])
       else if (action === "toggle-daemon")
         Quickshell.execDetached(["sh", "-c", "/home/hamo/.config/prayer-times/prayer-times.sh restart"])
     }

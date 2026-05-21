@@ -12,14 +12,7 @@ LABELS["makkah-ali-mala"]="🕋 Makkah - Ali Ibn Ahmad Mala"
 LABELS["fajr-makkah"]="🌅 Fajr Makkah (Al-Haram Al-Maki)"
 LABELS["alafasy"]="🎤 Mishary Alafasy"
 
-Fajr_LABELS["madani-1"]="🕋 Madani Athan 1 (Al-Masjid an-Nabawi)"
-Fajr_LABELS["madani-2"]="🕋 Madani Athan 2 (Al-Masjid an-Nabawi)"
-Fajr_LABELS["fajr-madani"]="🌅 Fajr Madani (Al-Masjid an-Nabawi)"
-Fajr_LABELS["makkah-ali-mala"]="🕋 Makkah - Ali Ibn Ahmad Mala"
-Fajr_LABELS["fajr-makkah"]="🌅 Fajr Makkah (Al-Haram Al-Maki)"
-Fajr_LABELS["alafasy"]="🎤 Mishary Alafasy"
-
-CHOICE=$(printf "%s\n" "${LABELS[@]}" | rofi -dmenu -p "Select Athan" -theme "$HOME/.config/rofi/config.rasi" 2>/dev/null)
+CHOICE=$(printf "%s\n" "${LABELS[@]}" | rofi -dmenu -p "Select Athan" 2>/dev/null)
 
 [ -z "$CHOICE" ] && exit 0
 
