@@ -1,0 +1,86 @@
+[global]
+    monitor = 0
+    follow = mouse
+    width = 350
+    height = 150
+    origin = top-right
+    offset = 10x50
+    scale = 0
+    notification_limit = 5
+    progress_bar = true
+    progress_bar_height = 10
+    progress_bar_frame_width = 1
+    progress_bar_min_width = 150
+    progress_bar_max_width = 300
+    corner_radius = 12
+    gap_size = 5
+    padding = 16
+    horizontal_padding = 16
+    text_icon_padding = 0
+    frame_width = 1
+    frame_color = "#C678DD"
+    separator_color = frame
+    sort = yes
+    idle_threshold = 120
+    font = "JetBrainsMono Nerd Font 10"
+    line_height = 4
+    markup = full
+    format = "<span foreground='#C678DD'>%I</span>\n<b>%s</b>\n%b"
+    alignment = left
+    vertical_alignment = center
+    show_age_threshold = 60
+    word_wrap = yes
+    ellipsize = middle
+    ignore_newline = no
+    stack_duplicates = true
+    hide_duplicate_count = false
+    show_indicators = yes
+    icon_position = left
+    min_icon_size = 32
+    max_icon_size = 64
+    sticky_history = yes
+    history_length = 20
+    dmenu = /usr/bin/rofi -dmenu -p dunst
+    browser = /usr/bin/xdg-open
+    always_run_script = true
+    mouse_left_click = close
+    mouse_middle_click = do_action
+    mouse_right_click = close_all
+
+[urgency_low]
+    background = "#282C34"
+    foreground = "#ABB2BF"
+    timeout = 10
+    highlight = "#98C379"
+
+[urgency_normal]
+    background = "#282C34"
+    foreground = "#ABB2BF"
+    timeout = 15
+    highlight = "#61AFEF"
+
+[urgency_critical]
+    background = "#282C34"
+    foreground = "#ABB2BF"
+    timeout = 0
+    highlight = "#E06C75"
+
+[prayer-times]
+    appname = prayer-times
+    urgency = critical
+    timeout = 0
+    background = "#1E2127"
+    foreground = "#C678DD"
+    frame_color = "#C678DD"
+    highlight = "#C678DD"
+    format = "<b>%s</b>\n%b"
+
+[fajr-prayer]
+    appname = prayer-times
+    urgency = critical
+    timeout = 0
+    background = "#1E2127"
+    foreground = "#61AFEF"
+    frame_color = "#61AFEF"
+    highlight = "#61AFEF"
+    format = "<b>%s</b>\n%b"

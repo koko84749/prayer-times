@@ -1,0 +1,20 @@
+{
+    "auto_detect": true,
+    "city": "Cairo",
+    "country": "Egypt",
+    "method": 5,
+    "athan_dir": "$HOME/.local/share/prayer-times/athans",
+    "athan_files": {
+        "madani-1": "adhan-madani-1.mp3",
+        "madani-2": "adhan-madani-2.mp3",
+        "fajr-madani": "adhan-fajr-madani.mp3",
+        "makkah-ali-mala": "adhan-makkah-ali-mala.mp3",
+        "fajr-makkah": "adhan-fajr-makkah.mp3",
+        "alafasy": "adhan-alafasy.mp3"
+    },
+    "selected_athan": "madani-1",
+    "selected_fajr_athan": "fajr-madani",
+    "use_different_fajr": true,
+    "notification_expire_sec": 30,
+    "volume": 80
+}
