@@ -61,27 +61,17 @@ Item {
     onTriggered: proc.running = true
   }
 
-  Rectangle {
-    id: pill
-    anchors.fill: parent
-    anchors.margins: 2
-    radius: height / 2
-    color: root.prayerClass === "error" ? Color.errorContainer
-         : Color.surfaceContainerHigh
-    opacity: 0.85
-
-    NText {
-      anchors.centerIn: parent
-      text: root.prayerText
-      font.pixelSize: 12
-      font.family: "monospace"
-      font.weight: Font.Medium
-      horizontalAlignment: Text.AlignHCenter
-      verticalAlignment: Text.AlignVCenter
-      elide: Text.ElideRight
-      color: root.prayerClass === "error" ? Color.onErrorContainer
-           : Color.mOnSurface
-    }
+  NText {
+    anchors.centerIn: parent
+    text: root.prayerText
+    font.pixelSize: 12
+    font.family: "monospace"
+    font.weight: Font.Medium
+    horizontalAlignment: Text.AlignHCenter
+    verticalAlignment: Text.AlignVCenter
+    elide: Text.ElideRight
+    color: root.prayerClass === "error" ? Color.error
+         : Color.mOnSurface
   }
 
   MouseArea {
@@ -91,7 +81,7 @@ Item {
     cursorShape: Qt.PointingHandCursor
     onClicked: mouse => {
       if (mouse.button === Qt.LeftButton)
-        Quickshell.execDetached(["sh", "-c", "/home/hamo/.config/prayer-times/prayer-times.sh select"])
+        Quickshell.execDetached(["sh", "-c", "/home/hamo/.config/prayer-times/prayer-times.sh times"])
       else if (mouse.button === Qt.RightButton)
         PanelService.showContextMenu(contextMenu, root, screen)
     }
@@ -100,13 +90,16 @@ Item {
   NPopupContextMenu {
     id: contextMenu
     model: [
+      { "label": "Show Times", "action": "show-times", "icon": "calendar" },
       { "label": "Select Athan", "action": "select-athan", "icon": "music" },
       { "label": "Restart Daemon", "action": "toggle-daemon", "icon": "power" },
     ]
     onTriggered: action => {
       contextMenu.close()
       PanelService.closeContextMenu(screen)
-      if (action === "select-athan")
+      if (action === "show-times")
+        Quickshell.execDetached(["sh", "-c", "/home/hamo/.config/prayer-times/prayer-times.sh times"])
+      else if (action === "select-athan")
         Quickshell.execDetached(["sh", "-c", "/home/hamo/.config/prayer-times/prayer-times.sh select"])
       else if (action === "toggle-daemon")
         Quickshell.execDetached(["sh", "-c", "/home/hamo/.config/prayer-times/prayer-times.sh restart"])

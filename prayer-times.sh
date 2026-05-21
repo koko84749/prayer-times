@@ -21,6 +21,19 @@ restart)
     nohup python3 "$HOME/.config/prayer-times/daemon.py" >/dev/null 2>&1 &
     notify-send -a prayer-times -u normal -t 3000 "Prayer Times" "Daemon restarted"
     ;;
+times)
+    CACHE="$HOME/.local/share/prayer-times/timings.json"
+    if [ ! -f "$CACHE" ]; then
+        notify-send -a prayer-times -u critical -t 5000 "Error" "No cached times"
+        exit 1
+    fi
+    FAJR=$(jq -r 'if type==\"object\" and has(\"timings\") then .timings.Fajr else .Fajr end' "$CACHE")
+    DHUHR=$(jq -r 'if type==\"object\" and has(\"timings\") then .timings.Dhuhr else .Dhuhr end' "$CACHE")
+    ASR=$(jq -r 'if type==\"object\" and has(\"timings\") then .timings.Asr else .Asr end' "$CACHE")
+    MAGHRIB=$(jq -r 'if type==\"object\" and has(\"timings\") then .timings.Maghrib else .Maghrib end' "$CACHE")
+    ISHA=$(jq -r 'if type==\"object\" and has(\"timings\") then .timings.Isha else .Isha end' "$CACHE")
+    notify-send -a prayer-times -u normal -t 10000 "🕌 Today's Prayer Times" "Fajr: $FAJR\nDhuhr: $DHUHR\nAsr: $ASR\nMaghrib: $MAGHRIB\nIsha: $ISHA"
+    ;;
 test)
     python3 -c "
 import json, sys
@@ -37,7 +50,7 @@ except Exception as e:
 "
     ;;
 *)
-    echo "Usage: $0 {status|select|start|stop|restart|test}"
+    echo "Usage: $0 {status|select|start|stop|restart|test|times}"
     exit 1
     ;;
 esac
