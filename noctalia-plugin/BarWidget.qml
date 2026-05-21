@@ -22,14 +22,18 @@ Item {
 
   property string prayerText: "🌙 ?"
   property string prayerClass: ""
+  property string prayerTooltip: ""
 
-  implicitWidth: textMetrics.advanceWidth + 24
+  readonly property real maxWidth: 160
+
+  implicitWidth: Math.min(textMetrics.advanceWidth + 24, maxWidth)
   implicitHeight: capsuleHeight
 
   TextMetrics {
     id: textMetrics
     font.family: "monospace"
     font.pixelSize: 13
+    font.weight: Font.Medium
     text: root.prayerText
   }
 
@@ -37,17 +41,16 @@ Item {
     id: proc
     command: ["sh", "-c", "/home/hamo/.config/prayer-times/status.sh"]
     running: true
-
     stdout: SplitParser {
       onRead: data => {
         try {
           var obj = JSON.parse(data.trim())
           root.prayerText = obj.text || "🌙 ?"
+          root.prayerTooltip = obj.tooltip || ""
           root.prayerClass = obj.class || ""
         } catch (e) {}
       }
     }
-
     onExited: timer.restart()
   }
 
@@ -58,13 +61,27 @@ Item {
     onTriggered: proc.running = true
   }
 
-  NText {
-    anchors.centerIn: parent
-    text: root.prayerText
-    font.pixelSize: 13
-    font.family: "monospace"
-    color: root.prayerClass === "error" ? Color.error
-         : Color.mOnSurface
+  Rectangle {
+    id: pill
+    anchors.fill: parent
+    anchors.margins: 2
+    radius: height / 2
+    color: root.prayerClass === "error" ? Color.errorContainer
+         : Color.surfaceContainerHigh
+    opacity: 0.85
+
+    NText {
+      anchors.centerIn: parent
+      text: root.prayerText
+      font.pixelSize: 12
+      font.family: "monospace"
+      font.weight: Font.Medium
+      horizontalAlignment: Text.AlignHCenter
+      verticalAlignment: Text.AlignVCenter
+      elide: Text.ElideRight
+      color: root.prayerClass === "error" ? Color.onErrorContainer
+           : Color.mOnSurface
+    }
   }
 
   MouseArea {
@@ -72,24 +89,20 @@ Item {
     acceptedButtons: Qt.LeftButton | Qt.RightButton
     hoverEnabled: true
     cursorShape: Qt.PointingHandCursor
-
     onClicked: mouse => {
-      if (mouse.button === Qt.LeftButton) {
+      if (mouse.button === Qt.LeftButton)
         Quickshell.execDetached(["sh", "-c", "/home/hamo/.config/prayer-times/prayer-times.sh select"])
-      } else if (mouse.button === Qt.RightButton) {
+      else if (mouse.button === Qt.RightButton)
         PanelService.showContextMenu(contextMenu, root, screen)
-      }
     }
   }
 
   NPopupContextMenu {
     id: contextMenu
-
     model: [
       { "label": "Select Athan", "action": "select-athan", "icon": "music" },
       { "label": "Restart Daemon", "action": "toggle-daemon", "icon": "power" },
     ]
-
     onTriggered: action => {
       contextMenu.close()
       PanelService.closeContextMenu(screen)
