@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 case "${1:-}" in
 status)
     exec "$HOME/.config/prayer-times/status.sh"
@@ -7,7 +8,6 @@ select)
     exec "$HOME/.config/prayer-times/select-athan.sh"
     ;;
 start)
-    pkill -f "python3.*prayer-times.*daemon" 2>/dev/null
     nohup python3 "$HOME/.config/prayer-times/daemon.py" >/dev/null 2>&1 &
     notify-send -a prayer-times -u normal -t 3000 "Prayer Times" "Daemon started"
     ;;
@@ -26,14 +26,12 @@ test)
 import json, sys
 from pathlib import Path
 sys.path.insert(0, str(Path.home() / '.config/prayer-times'))
-from daemon import fetch_prayer_times, load_config, detect_location
+from daemon import fetch_prayer_times, load_config
 cfg = load_config()
 try:
-    loc = detect_location()
-    print(f'📍 Detected: {loc}')
     t = fetch_prayer_times(cfg)
     for p in ['Fajr','Dhuhr','Asr','Maghrib','Isha']:
-        print(f'  {p}: {t[p]}')
+        print(f'{p}: {t[p]}')
 except Exception as e:
     print(f'Error: {e}')
 "

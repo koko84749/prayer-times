@@ -1,0 +1,26 @@
+{
+  "id": "prayer-times",
+  "name": "Prayer Times",
+  "version": "1.0.0",
+  "minNoctaliaVersion": "3.6.0",
+  "author": "koko84749",
+  "license": "MIT",
+  "description": "Shows next prayer countdown, plays Athan at prayer times, includes Rofi athan selector",
+  "tags": ["Bar", "Panel", "Utility", "Islamic"],
+  "repository": "https://github.com/koko84749/prayer-times",
+  "entryPoints": {
+    "main": "Main.qml",
+    "barWidget": "BarWidget.qml",
+    "settings": "Settings.qml"
+  },
+  "dependencies": {
+    "plugins": []
+  },
+  "metadata": {
+    "defaultSettings": {
+      "refreshInterval": 30,
+      "showNextPrayer": true,
+      "showCountdown": true
+    }
+  }
+}

@@ -1,25 +1,27 @@
 #!/usr/bin/env bash
-# Outputs JSON status for waybar/polybar/eww
 CACHE="$HOME/.local/share/prayer-times/timings.json"
 CONFIG="$HOME/.config/prayer-times/config.json"
 
 if [ ! -f "$CACHE" ]; then
     echo '{"text":"🌙 ?", "class":"error"}'
-    exit 1
+    exit 0
 fi
 
 CITY=$(jq -r '.city // "auto"' "$CONFIG")
 SEL=$(jq -r '.selected_athan // "madani-1"' "$CONFIG")
+LOCATION=$(jq -r '.city // ""' "$CACHE")
 
 NOW_EPOCH=$(date +%s)
 PRAYERS=("Fajr" "Dhuhr" "Asr" "Maghrib" "Isha")
+
+GET_TIMING='if type=="object" and has("timings") then .timings[$p] else .[$p] end // empty'
 
 NEXT_PRAYER=""
 NEXT_TIME=""
 
 for p in "${PRAYERS[@]}"; do
-    t=$(jq -r --arg p "$p" 'if type=="object" and has("timings") then .timings[$p] else .[$p] end // empty' "$CACHE")
-    [ -z "$t" ] && continue
+    t=$(jq -r --arg p "$p" "$GET_TIMING" "$CACHE")
+    [ -z "$t" ] || [ "$t" = "null" ] && continue
     PRAYER_EPOCH=$(date -d "$t" +%s 2>/dev/null)
     [ -z "$PRAYER_EPOCH" ] && continue
     if [ "$PRAYER_EPOCH" -gt "$NOW_EPOCH" ]; then
@@ -47,4 +49,4 @@ DIFF=$((PRAYER_EPOCH - NOW_EPOCH))
 H=$((DIFF / 3600))
 M=$(( (DIFF % 3600) / 60 ))
 
-echo "{\"text\":\"🕌 ${NEXT_PRAYER} ${H}h${M}m\", \"tooltip\":\"Next: ${NEXT_PRAYER} at ${NEXT_TIME}\\nAthan: ${SEL}\", \"class\":\"next-prayer\"}"
+echo "{\"text\":\"🕌 ${NEXT_PRAYER} ${H}h${M}m\", \"tooltip\":\"${NEXT_PRAYER} at ${NEXT_TIME}\\nAthan: ${SEL}\", \"class\":\"next-prayer\"}"

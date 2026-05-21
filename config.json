@@ -3,7 +3,7 @@
     "city": "Cairo",
     "country": "Egypt",
     "method": 5,
-    "athan_dir": "$HOME/.local/share/prayer-times/athans",
+    "athan_dir": "/home/hamo/.local/share/prayer-times/athans",
     "athan_files": {
         "madani-1": "adhan-madani-1.mp3",
         "madani-2": "adhan-madani-2.mp3",

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Prayer Times Daemon - Islamic prayer times with Athan notifications.
+Prayer Times Daemon - Islamic prayer times with Athan notifications
 Auto-detects location via IP, falls back to config.
 Plays Madani/Makkah/etc athan at prayer times via dunst + mpv.
 """
@@ -18,6 +18,15 @@ CACHE_PATH = Path.home() / ".local/share/prayer-times/timings.json"
 LOCATION_CACHE = Path.home() / ".local/share/prayer-times/location.json"
 ATHAN_DIR = Path.home() / ".local/share/prayer-times/athans"
 CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+PRAYER_NAMES = {
+    "Fajr": "Fajr",
+    "Sunrise": "Sunrise",
+    "Dhuhr": "Dhuhr",
+    "Asr": "Asr",
+    "Maghrib": "Maghrib",
+    "Isha": "Isha",
+}
 
 PRAYER_ORDER = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"]
 
@@ -152,6 +161,7 @@ def send_notification(prayer_name, timings):
     arabic_names = {"Fajr": "الفجر", "Dhuhr": "الظهر", "Asr": "العصر", "Maghrib": "المغرب", "Isha": "العشاء"}
     ar = arabic_names.get(prayer_name, prayer_name)
     t = timings[prayer_name]
+    rule = "fajr-prayer" if prayer_name == "Fajr" else "prayer-times"
 
     subprocess.run(
         [

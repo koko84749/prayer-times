@@ -84,3 +84,9 @@
     frame_color = "#61AFEF"
     highlight = "#61AFEF"
     format = "<b>%s</b>\n%b"
+
+[short-notif]
+    urgency = normal
+    timeout = 8
+    background = "#282C34"
+    foreground = "#ABB2BF"
