@@ -92,6 +92,7 @@ Item {
     model: [
       { "label": "Show Times", "action": "show-times", "icon": "calendar" },
       { "label": "Select Athan", "action": "select-athan", "icon": "music" },
+      { "label": "Add Custom Athan", "action": "add-athan", "icon": "plus" },
       { "label": "Set Location", "action": "set-location", "icon": "map" },
       { "label": "Restart Daemon", "action": "toggle-daemon", "icon": "power" },
     ]
@@ -101,9 +102,11 @@ Item {
       if (action === "show-times")
         Quickshell.execDetached(["bash", "-c", "C=$HOME/.local/share/prayer-times/timings.json; JQ='if type==\"object\" and has(\"timings\") then .timings else . end'; F=$(jq -r \"$JQ | .Fajr\" $C); D=$(jq -r \"$JQ | .Dhuhr\" $C); A=$(jq -r \"$JQ | .Asr\" $C); M=$(jq -r \"$JQ | .Maghrib\" $C); I=$(jq -r \"$JQ | .Isha\" $C); notify-send -a prayer-times -u normal -t 10000 \"🕌 Today's Prayer Times\" \"Fajr: $F\\nDhuhr: $D\\nAsr: $A\\nMaghrib: $M\\nIsha: $I\""])
       else if (action === "select-athan")
-        Quickshell.execDetached(["bash", "-c", "C=$HOME/.config/prayer-times/config.json; declare -A L; L[Madani-1]='Madani 1 (Nabawi)'; L[Madani-2]='Madani 2 (Nabawi)'; L[Fajr-Madani]='Fajr Madani'; L[Makkah]='Makkah (Ali Mala)'; L[Fajr-Makkah]='Fajr Makkah'; L[Alafasy]='Mishary Alafasy'; CHOICE=$(printf '%s\\n' \"${L[@]}\" | rofi -dmenu -p '🎵 Select Athan'); for k in \"${!L[@]}\"; do [ \"${L[$k]}\" = \"$CHOICE\" ] && jq --arg k \"$k\" '.selected_athan = $k' $C > /tmp/pc.json && mv /tmp/pc.json $C && notify-send -a prayer-times -u normal -t 3000 'Athan Changed' \"$CHOICE\" && break; done"])
+        Quickshell.execDetached(["bash", "-c", "exec $HOME/.config/prayer-times/select-athan.sh"])
+      else if (action === "add-athan")
+        Quickshell.execDetached(["bash", "-c", "exec $HOME/.config/prayer-times/add-athan.sh"])
       else if (action === "set-location")
-        Quickshell.execDetached(["bash", "-c", "C=$HOME/.config/prayer-times/config.json; CHOICE=$(printf 'Auto-detect\\nCairo, Egypt\\nMecca, Saudi Arabia\\nMedina, Saudi Arabia\\nIstanbul, Turkey\\nOther...' | rofi -dmenu -p '📍 Location'); [ -z \"$CHOICE\" ] && exit 0; if [ \"$CHOICE\" = 'Auto-detect' ]; then jq '.auto_detect = true' $C > /tmp/pc.json && mv /tmp/pc.json $C; notify-send -a prayer-times -u normal -t 3000 'Location' 'Auto-detect enabled'; elif [ \"$CHOICE\" = 'Other...' ]; then CITY=$(rofi -dmenu -p 'City'); COUNTRY=$(rofi -dmenu -p 'Country'); [ -n \"$CITY\" ] && [ -n \"$COUNTRY\" ] && jq --arg c \"$CITY\" --arg co \"$COUNTRY\" '.auto_detect = false | .city = $c | .country = $co' $C > /tmp/pc.json && mv /tmp/pc.json $C && notify-send -a prayer-times -u normal -t 3000 'Location' \"$CITY, $COUNTRY\"; else CITY=\"${CHOICE%%, *}\"; COUNTRY=\"${CHOICE#*, }\"; jq --arg c \"$CITY\" --arg co \"$COUNTRY\" '.auto_detect = false | .city = $c | .country = $co' $C > /tmp/pc.json && mv /tmp/pc.json $C && notify-send -a prayer-times -u normal -t 3000 'Location' \"$CITY, $COUNTRY\"; fi"])
+        Quickshell.execDetached(["bash", "-c", "exec $HOME/.config/prayer-times/set-location.sh"])
       else if (action === "toggle-daemon")
         Quickshell.execDetached(["bash", "-c", "pkill -f 'python.*prayer-times.*daemon' 2>/dev/null; sleep 1; nohup python3 $HOME/.config/prayer-times/daemon.py >/dev/null 2>&1 & notify-send -a prayer-times -u normal -t 3000 'Daemon' 'Restarted'"])
     }

@@ -53,8 +53,11 @@ except Exception as e:
 location)
     exec "$HOME/.config/prayer-times/set-location.sh"
     ;;
+add-athan)
+    exec "$HOME/.config/prayer-times/add-athan.sh"
+    ;;
 *)
-    echo "Usage: $0 {status|select|start|stop|restart|test|times|location}"
+    echo "Usage: $0 {status|select|start|stop|restart|test|times|location|add-athan}"
     exit 1
     ;;
 esac

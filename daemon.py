@@ -19,21 +19,28 @@ LOCATION_CACHE = Path.home() / ".local/share/prayer-times/location.json"
 ATHAN_DIR = Path.home() / ".local/share/prayer-times/athans"
 CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
 
-PRAYER_NAMES = {
-    "Fajr": "Fajr",
-    "Sunrise": "Sunrise",
-    "Dhuhr": "Dhuhr",
-    "Asr": "Asr",
-    "Maghrib": "Maghrib",
-    "Isha": "Isha",
-}
-
 PRAYER_ORDER = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"]
 
 
 def load_config():
     with open(CONFIG_PATH) as f:
         return json.load(f)
+
+
+def scan_custom_athans():
+    builtin = {"madani-1", "madani-2", "fajr-madani", "makkah-ali-mala", "fajr-makkah", "alafasy"}
+    if not ATHAN_DIR.exists():
+        return
+    config = load_config()
+    files = config.setdefault("athan_files", {})
+    changed = False
+    for mp3 in sorted(ATHAN_DIR.glob("*.mp3")):
+        stem = mp3.stem
+        if stem not in builtin and stem not in files:
+            files[stem] = mp3.name
+            changed = True
+    if changed:
+        CONFIG_PATH.write_text(json.dumps(config, indent=2))
 
 
 def get_today_date():
@@ -194,6 +201,7 @@ def send_next_prayer_notif(next_name, next_time, timings):
 
 def main():
     config = load_config()
+    scan_custom_athans()
 
     timings = get_times(config)
     last_date = get_today_date()
