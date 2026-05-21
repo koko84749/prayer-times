@@ -20,6 +20,16 @@ Islamic prayer times daemon for **Linux (Hyprland/Wayland)** with Athan notifica
 curl -sL https://raw.githubusercontent.com/koko84749/prayer-times/main/install.sh | bash
 ```
 
+### Noctalia Plugin
+
+This project includes a [Noctalia](https://github.com/Noctalia) plugin. After installing, copy the plugin to your Noctalia plugins:
+
+```bash
+cp -r noctalia-plugin ~/.config/noctalia/plugins/prayer-times
+```
+
+The plugin adds a **bar widget** showing the next prayer countdown and a **settings panel** to configure the daemon from Noctalia's UI.
+
 ### Dependencies
 
 ```bash
